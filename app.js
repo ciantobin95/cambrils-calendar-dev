@@ -1,18 +1,7 @@
 import { auth, FAMILY_PASSCODE } from './data.js';
 import Modal from './modal.js';
-import { initInstallPrompt, showInstallPrompt } from './install.js';
 import { initCalendar } from './calendar-init.js';
 import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker Registered!', reg))
-            .catch(err => console.error('Service Worker Registration Failed', err));
-    });
-}
-
-initInstallPrompt();
 
 document.addEventListener('DOMContentLoaded', async function() {
     const authenticated = localStorage.getItem("house_auth");
@@ -22,7 +11,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (entry === FAMILY_PASSCODE) {
             localStorage.setItem("house_auth", "true");
-            setTimeout(showInstallPrompt, 1500);
         } else {
             document.body.innerHTML = `
                 <div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f4f8; flex-direction:column;">
@@ -31,8 +19,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 </div>`;
             return;
         }
-    } else {
-        setTimeout(showInstallPrompt, 1500);
     }
 
     try {
