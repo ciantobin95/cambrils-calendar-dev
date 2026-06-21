@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambrils Weather</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Cambrils Weather</h1>
+        <p style="opacity: 0.8; font-weight: 300; margin-top: 5px; margin-bottom: 15px;">Live Forecast</p>
+        <button onclick="window.location.href='index.html'" class="today-btn">⬅ Back to Calendar</button>
+    </header>
+
+    <div class="weather-container">
+        
+        <div class="current-weather-card">
+            <h3 style="margin-top:0; font-weight:500; opacity:0.7; font-size:1.1rem;">Weather Right Now</h3>
+            
+            <div id="loadingText">Loading forecast...</div>
+            
+            <div id="weatherContent" style="display:none;">
+                
+                <div class="temp-big" id="currentTemp">--°</div>
+                
+                <div class="condition-row">
+                    <div id="currentCondition" class="condition-text">--</div>
+                    <div class="wind-metric">
+                        <span style="opacity:0.7;">|</span> 💨 <span id="windSpeed">--</span> km/h
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-icon">🌅</span>
+                        <div class="stat-text">
+                            <span id="sunriseTime">--:--</span>
+                            <div class="stat-label">Sunrise</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-item">
+                        <span class="stat-icon">🌇</span>
+                        <div class="stat-text">
+                            <span id="sunsetTime">--:--</span>
+                            <div class="stat-label">Sunset</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="forecast-list" id="forecastList">
+            </div>
+
+    </div>
+
+    <script src="weather.js"></script>
+</body>
+</html>

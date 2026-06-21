@@ -1,0 +1,325 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    padding: 0;
+    color: #1a1a1b;
+    scroll-behavior: smooth;
+}
+
+header {
+    background: linear-gradient(rgba(46, 125, 50, 0.7), rgba(30, 90, 40, 0.9)), url('cambrils-header.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    color: white;
+    padding: 2.5rem 1rem 2rem 1rem;
+    text-align: center;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -1px;
+    font-size: 2rem;
+}
+
+/* --- SHARED MODAL STYLES --- */
+.modal-overlay {
+    position: fixed; 
+    z-index: 9999; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.5); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: white; 
+    padding: 30px; 
+    border-radius: 24px; 
+    text-align: center; 
+    width: 85%; 
+    max-width: 320px; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2); 
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-input {
+    width: 100%; 
+    padding: 15px; 
+    margin-bottom: 25px; 
+    font-size: 16px; 
+    border-radius: 12px; 
+    border: 1px solid #e0e6ed; 
+    background: #f8f9fa;
+    box-sizing: border-box;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.modal-input:focus {
+    border-color: #2e7d32;
+    background: white;
+}
+
+.modal-actions {
+    display: flex; 
+    gap: 12px;
+}
+
+.btn-cancel {
+    flex: 1; 
+    padding: 14px; 
+    background: #f1f3f5; 
+    color: #495057;
+    border: none; 
+    border-radius: 12px; 
+    cursor: pointer; 
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.btn-confirm {
+    flex: 1; 
+    padding: 14px; 
+    background: var(--primary-gradient); 
+    color: white; 
+    border: none; 
+    border-radius: 12px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ef5350 0%, #c62828 100%) !important;
+    color: white !important; 
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3) !important;
+}
+
+/* --- CALENDAR STYLES --- */
+.today-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+
+.today-btn:active {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0.95);
+}
+
+#calendar {
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0;
+    background: transparent;
+}
+
+.fc-multimonth-month {
+    padding: 15px !important;
+    background: var(--glass-bg) !important;
+    margin-bottom: 30px !important;
+    border-radius: 30px !important;
+    box-shadow: var(--shadow) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+.fc-multimonth {
+    border: none !important;
+    background: transparent !important;
+}
+
+.fc-multimonth-title {
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+    color: #2e7d32 !important;
+    padding: 10px 0 10px 5px !important;
+}
+
+.fc-v-event, .fc-h-event {
+    border-radius: 20px !important;
+    padding: 4px 10px !important;
+    border: none !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+}
+
+.fc .fc-day-today {
+    background: rgba(46, 125, 50, 0.1) !important;
+    border-radius: 8px;
+    border: 2px solid #2e7d32 !important;
+}
+
+.fc .fc-daygrid-day-frame {
+    min-height: 70px !important; 
+}
+
+/* --- WEATHER PAGE STYLES --- */
+.weather-container {
+    max-width: 95%;
+    margin: 0 auto 40px auto;
+}
+
+/* Current Weather Card */
+.current-weather-card {
+    background: var(--glass-bg);
+    padding: 30px 20px;
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    margin-bottom: 25px;
+}
+
+.temp-big {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #2e7d32;
+    margin: 10px 0;
+}
+
+/* NEW: Condition Row (Side-by-Side) */
+.condition-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px; /* Space before Sunrise/Sunset */
+}
+
+.condition-text {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.wind-metric {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Stats Grid (Now just 2 items: Sunrise/Sunset) */
+.stats-grid {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-top: 25px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-icon {
+    font-size: 1.6rem;
+    margin-bottom: 5px;
+}
+
+.stat-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+/* 7-Day Forecast Rows */
+.forecast-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.forecast-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 15px 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.day-name {
+    font-weight: 600;
+    width: 50px;
+    color: #333;
+}
+
+.day-icon {
+    font-size: 1.5rem;
+}
+
+.day-temp .max {
+    font-weight: 700;
+    margin-right: 8px;
+    color: #333;
+}
+.day-temp .min {
+    color: #888;
+}
+
+/* Weather Button */
+.weather-btn {
+    background: rgba(255, 255, 255, 0.9);
+    color: #2e7d32;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: inline-block;
+    text-decoration: none;
+}

@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /bookings/{booking} {
+      // Any signed-in client (anonymous is fine) may read.
+      allow read: if request.auth != null;
+
+      // Creates must be signed in and have the expected fields/types.
+      allow create: if request.auth != null
+                    && request.resource.data.title is string
+                    && request.resource.data.start is string
+                    && request.resource.data.end is string
+                    && request.resource.data.color is string;
+
+      // Signed-in clients may delete bookings (matches current app behaviour).
+      allow delete: if request.auth != null;
+
+      // No edits are used by the app, so disallow updates.
+      allow update: if false;
+    }
+  }
+}
