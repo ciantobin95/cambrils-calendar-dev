@@ -263,21 +263,30 @@ document.addEventListener('DOMContentLoaded', async function() {
         calendar.unselect();
     };
 
+    function docToEvent(doc) {
+        const data = doc.data();
+        return {
+            id: doc.id,
+            title: data.title,
+            start: data.start,
+            end: data.end,
+            allDay: true,
+            backgroundColor: data.color || '#2e7d32',
+            borderColor: 'white',
+            textColor: 'white'
+        };
+    }
+
     onSnapshot(bookingsRef, (snapshot) => {
-        const eventArray = snapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-                id: doc.id,
-                title: data.title,
-                start: data.start,
-                end: data.end,
-                allDay: true,
-                backgroundColor: data.color || '#2e7d32',
-                borderColor: 'white',
-                textColor: 'white'
-            };
+        snapshot.docChanges().forEach(change => {
+            if (change.type === 'added') {
+                calendar.addEvent(docToEvent(change.doc));
+            } else if (change.type === 'removed') {
+                calendar.getEventById(change.doc.id)?.remove();
+            } else if (change.type === 'modified') {
+                calendar.getEventById(change.doc.id)?.remove();
+                calendar.addEvent(docToEvent(change.doc));
+            }
         });
-        calendar.removeAllEvents();
-        calendar.addEventSource(eventArray);
     });
 });
