@@ -1,6 +1,6 @@
 {
-  "name": "calendar-dev",
-  "short_name": "calendar-dev",
+  "name": "dev",
+  "short_name": "dev",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
