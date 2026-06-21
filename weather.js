@@ -79,7 +79,7 @@ async function fetchWeather() {
             const row = document.createElement('div');
             row.className = 'forecast-row';
             row.innerHTML = `
-                <div class="day-name" style="width:120px; font-size:0.95rem;">${finalDateString}</div>
+                <div class="day-name">${finalDateString}</div>
                 <div class="day-icon">${info.icon}</div>
                 <div class="day-temp">
                     <span class="max">${maxTemp}°</span> 
@@ -91,7 +91,9 @@ async function fetchWeather() {
 
     } catch (error) {
         console.error("Weather load failed", error);
-        document.getElementById('loadingText').innerText = "Could not load weather.";
+        const status = document.getElementById('loadingText');
+        status.classList.add('error');
+        status.innerText = "Sorry, we couldn’t load the weather. Please check your internet and reload the page.";
     }
 }
 

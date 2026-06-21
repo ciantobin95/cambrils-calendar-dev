@@ -18,23 +18,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (entry === FAMILY_PASSCODE) {
             localStorage.setItem("house_auth", "true");
         } else {
-            document.body.innerHTML = `
-                <div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f4f8; flex-direction:column;">
-                    <h2 style="font-family:'Inter'; color:#c62828;">Access Denied</h2>
-                    <button onclick="location.reload()" style="padding:10px 20px; margin-top:20px; border-radius:10px; border:none; background:#ccc; font-size:16px;">Try Again</button>
-                </div>`;
+            await Modal.show('alert', 'That passcode wasn’t right',
+                'Please try again with the family passcode.', 'Try again');
+            location.reload();
             return;
         }
     }
 
+    const hideLoading = Modal.showLoading('Connecting…', 'Loading the family calendar.');
     try {
         await signInAnonymously(auth);
     } catch (e) {
         console.error("Auth failed", e);
-        await Modal.show('confirm', 'Connection Problem',
-            'Could not connect to the booking service. Please check your internet and reload.', 'OK');
+        hideLoading();
+        await Modal.show('alert', 'No connection',
+            'We could not connect to the booking service. Please check your internet and reload the page.', 'OK');
         return;
     }
 
+    hideLoading();
     initCalendar();
 });
