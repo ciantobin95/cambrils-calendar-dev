@@ -1,4 +1,4 @@
-const CACHE_NAME = 'house-cal-v41';
+const CACHE_NAME = 'house-cal-v42';
 
 // App shell: all same-origin assets that must work offline
 const PRECACHE_ASSETS = [
@@ -7,6 +7,11 @@ const PRECACHE_ASSETS = [
   './weather.html',
   './style.css',
   './app.js',
+  './modal.js',
+  './data.js',
+  './install.js',
+  './calendar-init.js',
+  './utils.js',
   './weather.js',
   './manifest.json',
   './fullcalendar.min.js',
