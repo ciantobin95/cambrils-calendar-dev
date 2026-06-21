@@ -3,6 +3,12 @@ import Modal from './modal.js';
 import { initCalendar } from './calendar-init.js';
 import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+// Registers the cleanup service worker so any device still running the old
+// offline worker receives the self-removing replacement automatically.
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
     const authenticated = localStorage.getItem("house_auth");
 
