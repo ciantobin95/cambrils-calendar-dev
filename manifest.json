@@ -1,6 +1,6 @@
 {
-  "name": "Cambrils Calendar",
-  "short_name": "Cambrils Calendar",
+  "name": "calendar-dev",
+  "short_name": "calendar-dev",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
