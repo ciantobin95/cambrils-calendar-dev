@@ -20,22 +20,28 @@ export const bookingsRef = collection(db, "bookings");
 
 export const FAMILY_PASSCODE = "Becky";
 
+// High-contrast, colour-blind-distinguishable hues, all dark enough to read
+// with white text (each clears WCAG AA against white event text).
 export const FAMILY_COLORS = {
-    "Mum & Dad": "#FFD93D",
-    "Cian":      "#6BCBFF",
-    "Mark":      "#4D96FF",
-    "Erica":     "#FF6B6B",
+    "Mum & Dad": "#2A6F3D", // green
+    "Cian":      "#1056A6", // blue
+    "Mark":      "#6D3BB5", // purple
+    "Erica":     "#B23E86", // magenta
 };
 
 export function docToEvent(doc) {
     const data = doc.data();
+    // Colour is driven by who the booking is for, so the calendar always
+    // matches the on-screen legend (older bookings keep any stored colour
+    // only if the name is not one we recognise).
+    const color = FAMILY_COLORS[data.title] || data.color || '#0A5C8A';
     return {
         id:              doc.id,
         title:           data.title,
         start:           data.start,
         end:             data.end,
         allDay:          true,
-        backgroundColor: data.color || '#2e7d32',
+        backgroundColor: color,
         borderColor:     'white',
         textColor:       'white'
     };
