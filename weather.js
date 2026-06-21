@@ -1,4 +1,5 @@
-// Coordinates for Cambrils, Spain
+import { getOrdinalSuffix } from './utils.js';
+
 const LAT = 41.0667;
 const LON = 1.05;
 
@@ -20,17 +21,6 @@ function getWeatherDesc(code) {
         96: { text: "Thunderstorm", icon: "⚡" }
     };
     return codes[code] || { text: "Unknown", icon: "❓" };
-}
-
-// Helper to get suffix (st, nd, rd, th)
-function getOrdinalSuffix(day) {
-    if (day > 3 && day < 21) return 'th';
-    switch (day % 10) {
-        case 1:  return "st";
-        case 2:  return "nd";
-        case 3:  return "rd";
-        default: return "th";
-    }
 }
 
 async function fetchWeather() {
