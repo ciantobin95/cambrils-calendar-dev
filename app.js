@@ -97,12 +97,18 @@ function runLaunchSplash() {
         // Wait for the splash photo to fully decode before kicking off the zoom,
         // so the animation always starts on a painted frame. If the image takes
         // too long, start anyway — the OS splash is still visible underneath.
+        // The ?v= query matches the cache-busted URL in the inline <style> in
+        // index.html so this preload hits the same browser cache entry instead
+        // of triggering a second network fetch.
         const img = new Image();
         let started = false;
         const start = () => { if (!started) { started = true; startZoom(); } };
         img.addEventListener('load', start);
         img.addEventListener('error', start);
-        img.src = 'splash-cambrils.jpg';
+        const versionedSplash = (LOADED_VERSION && LOADED_VERSION !== '__APP_VERSION__')
+            ? `splash-cambrils.jpg?v=${LOADED_VERSION}`
+            : 'splash-cambrils.jpg';
+        img.src = versionedSplash;
         setTimeout(start, IMAGE_WAIT_MS);
     });
 }
