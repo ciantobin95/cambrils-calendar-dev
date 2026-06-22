@@ -131,10 +131,10 @@ export function initCalendar() {
             headerToolbar:   false,
             selectable:      false,   // we handle all clicks manually
             editable:        false,
-            validRange:      { start: toDateInputValue(today) },
 
             datesSet(info) {
                 pickerMonthLabel.innerText = info.view.title;
+                updatePickerPrevState();
                 applyPickerHighlight();
             },
 
@@ -163,8 +163,22 @@ export function initCalendar() {
         });
 
         picker.render();
-        pickerPrevBtn.addEventListener('click', () => picker.prev());
+        pickerPrevBtn.addEventListener('click', () => {
+            if (pickerPrevBtn.disabled) return;
+            picker.prev();
+        });
         pickerNextBtn.addEventListener('click', () => picker.next());
+    }
+
+    // Disable the picker's "previous" button once we reach the current month,
+    // so the user can never page into the past.
+    function updatePickerPrevState() {
+        if (!picker) return;
+        const now = new Date();
+        const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const viewDate = picker.getDate();
+        const viewMonthStart = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
+        pickerPrevBtn.disabled = viewMonthStart <= currentMonthStart;
     }
 
     // ---- Apply range highlight to picker day cells ----
