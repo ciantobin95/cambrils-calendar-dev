@@ -8,12 +8,18 @@
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-title" content="Cambrils">
     <meta name="theme-color" content="#0A5C8A">
+    <meta name="app-version" content="__APP_VERSION__">
 
     <script src="./fullcalendar.min.js"></script>
 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <div id="updateBanner" class="update-banner" hidden>
+        <span class="update-banner-text">A new version is ready.</span>
+        <button id="updateBannerBtn" class="update-banner-btn">Update now</button>
+    </div>
 
     <!-- Guided booking flow -->
     <div id="bookingModal" class="modal-overlay" style="display:none;">
