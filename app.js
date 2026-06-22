@@ -49,7 +49,67 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') checkForUpdate();
 });
 
+// --- Animated launch splash ---
+// Runs a 3-second slow zoom over the beach photo, then dissolves to reveal
+// the calendar. Resolves once the overlay is fully gone so the auth flow
+// below can wait for it before popping the password / loading modal.
+function runLaunchSplash() {
+    const splash = document.getElementById('appSplash');
+    if (!splash) {
+        document.body.classList.remove('app-splash-active');
+        return Promise.resolve();
+    }
+
+    return new Promise(resolve => {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const ZOOM_MS = reduced ? 0 : 3000;
+        const EXIT_MS = reduced ? 200 : 700;
+        // Cap waiting for the image so a slow network can't strand the splash.
+        const IMAGE_WAIT_MS = 1500;
+
+        const finish = () => {
+            if (splash.isConnected) splash.remove();
+            document.body.classList.remove('app-splash-active', 'app-splash-leaving');
+            resolve();
+        };
+
+        const beginExit = () => {
+            document.body.classList.add('app-splash-leaving');
+            splash.classList.add('is-leaving');
+            // animationend can be missed if the element is removed early or in
+            // edge browsers; the timeout is a belt-and-braces backstop.
+            let done = false;
+            const onEnd = () => {
+                if (done) return;
+                done = true;
+                splash.removeEventListener('animationend', onEnd);
+                finish();
+            };
+            splash.addEventListener('animationend', onEnd);
+            setTimeout(onEnd, EXIT_MS + 100);
+        };
+
+        const startZoom = () => {
+            splash.classList.add('is-zooming');
+            setTimeout(beginExit, ZOOM_MS);
+        };
+
+        // Wait for the splash photo to fully decode before kicking off the zoom,
+        // so the animation always starts on a painted frame. If the image takes
+        // too long, start anyway — the OS splash is still visible underneath.
+        const img = new Image();
+        let started = false;
+        const start = () => { if (!started) { started = true; startZoom(); } };
+        img.addEventListener('load', start);
+        img.addEventListener('error', start);
+        img.src = 'splash-cambrils.jpg';
+        setTimeout(start, IMAGE_WAIT_MS);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
+    await runLaunchSplash();
+
     const authenticated = localStorage.getItem("house_auth");
 
     if (authenticated !== "true") {
