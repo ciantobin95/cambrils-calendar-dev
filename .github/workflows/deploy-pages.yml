@@ -28,6 +28,12 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Stamp version
+        run: |
+          SHA="${{ github.sha }}"
+          sed -i "s/__APP_VERSION__/$SHA/g" index.html weather.html
+          printf '{"version":"%s"}\n' "$SHA" > version.json
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
