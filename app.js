@@ -10,17 +10,29 @@ if ('serviceWorker' in navigator) {
 }
 
 // --- Update available: surface a banner when a new deploy is live ---
+// The banner needs to appear reliably whenever a change is merged into main,
+// so the check is wired into every reasonable signal that a fresh deploy
+// might be available: initial module load, returning to the tab, regaining
+// focus, network coming back online, page restored from bfcache, and a
+// periodic background poll for long-open sessions.
 const LOADED_VERSION = document
     .querySelector('meta[name="app-version"]')?.content;
 let updateBannerShown = false;
 let lastUpdateCheck = 0;
+// Short debounce so legitimate event-driven re-checks (e.g. quickly
+// backgrounding and refocusing the app) aren't swallowed, while still
+// preventing rapid-fire bursts if multiple events fire at once.
+const UPDATE_CHECK_DEBOUNCE_MS = 10_000;
+// While the app is open and visible, poll periodically so a deploy that
+// lands mid-session doesn't go unnoticed until the user app-switches.
+const UPDATE_CHECK_POLL_MS = 5 * 60 * 1000;
 
 async function checkForUpdate() {
     // Skip during local dev: the workflow replaces this placeholder at deploy time.
     if (!LOADED_VERSION || LOADED_VERSION === '__APP_VERSION__') return;
     if (updateBannerShown) return;
     const now = Date.now();
-    if (now - lastUpdateCheck < 60000) return;   // debounce: once a minute max
+    if (now - lastUpdateCheck < UPDATE_CHECK_DEBOUNCE_MS) return;
     lastUpdateCheck = now;
     try {
         const res = await fetch('version.json?_=' + now, { cache: 'no-store' });
@@ -45,9 +57,26 @@ if (updateBtn) {
     });
 }
 
+// Fire as early as possible — module scripts are deferred, so the DOM is
+// already parsed and the banner element exists. This means the network
+// request for version.json kicks off in parallel with the splash zoom and
+// auth, instead of waiting for the calendar to finish initialising.
+checkForUpdate();
+
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') checkForUpdate();
 });
+// Some Android browsers fire focus instead of (or alongside) visibilitychange
+// when the user returns to the PWA from the recents list. pageshow also
+// covers the back/forward cache restoration path. online catches users who
+// were offline when the deploy landed.
+window.addEventListener('focus', () => checkForUpdate());
+window.addEventListener('pageshow', () => checkForUpdate());
+window.addEventListener('online', () => checkForUpdate());
+
+setInterval(() => {
+    if (document.visibilityState === 'visible') checkForUpdate();
+}, UPDATE_CHECK_POLL_MS);
 
 // --- Animated launch splash ---
 // Runs a 3-second slow zoom over the beach photo, then dissolves to reveal
@@ -144,5 +173,4 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     hideLoading();
     initCalendar();
-    checkForUpdate();
 });
