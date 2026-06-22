@@ -370,7 +370,7 @@ select:focus-visible,
     border-radius: 28px;
     text-align: center;
     width: 100%;
-    max-width: 440px;
+    max-width: 520px;
     box-shadow: var(--shadow-lg);
     animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -666,6 +666,147 @@ select:focus-visible,
     .month-nav-btn { padding: 12px 16px; font-size: 1.05rem; }
     .name-options { grid-template-columns: 1fr; }
     .fc .fc-daygrid-day-number { font-size: 1.05rem; }
+}
+
+/* --- RANGE DATE PICKER --- */
+
+.picker-hint {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--sea-blue);
+    text-align: center;
+    margin: 0 0 14px 0;
+    min-height: 2.5em;
+    line-height: 1.4;
+}
+
+.picker-month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.picker-month-nav .month-nav-btn {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 8px 14px;
+    font-size: 1.15rem;
+}
+.picker-month-label {
+    flex: 1 1 auto;
+    text-align: center;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--ink-navy);
+}
+
+.booking-picker {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    margin-bottom: 14px;
+}
+
+/* Make picker day cells comfortably tappable */
+.booking-picker .fc .fc-daygrid-day-frame {
+    min-height: 52px !important;
+    cursor: pointer;
+}
+.booking-picker .fc .fc-daygrid-day-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 6px 8px;
+}
+.booking-picker .fc .fc-col-header-cell-cushion {
+    font-size: 0.95rem;
+    padding: 8px 4px;
+}
+
+/* Past days: greyed out, not clickable */
+.booking-picker [data-date].pick-past {
+    opacity: 0.35;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* In-range band: soft sea-blue fill across the full cell */
+.booking-picker [data-date].pick-in-range .fc-daygrid-day-frame {
+    background: rgba(10, 92, 138, 0.12);
+}
+
+/* Start day: left half of band + solid pill on the day number */
+.booking-picker [data-date].pick-start .fc-daygrid-day-frame {
+    background: linear-gradient(
+        to right,
+        transparent 50%,
+        rgba(10, 92, 138, 0.12) 50%
+    );
+}
+.booking-picker [data-date].pick-start .fc-daygrid-day-number {
+    background: var(--sea-blue);
+    color: var(--cloud) !important;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px auto;
+}
+
+/* End day: right half of band + solid pill on the day number */
+.booking-picker [data-date].pick-end .fc-daygrid-day-frame {
+    background: linear-gradient(
+        to left,
+        transparent 50%,
+        rgba(10, 92, 138, 0.12) 50%
+    );
+}
+.booking-picker [data-date].pick-end .fc-daygrid-day-number {
+    background: var(--sea-blue);
+    color: var(--cloud) !important;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px auto;
+}
+
+/* When start and end are the same day (single-night stay) - just the pill */
+.booking-picker [data-date].pick-start.pick-end .fc-daygrid-day-frame {
+    background: transparent;
+}
+
+/* Sun-gold today marker inside the picker */
+.booking-picker .fc .fc-day-today .fc-daygrid-day-number {
+    background: var(--sun-gold);
+    color: var(--ink-navy);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px auto;
+    font-weight: 800;
+    box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.3);
+}
+/* If today is the selected start or end, sea-blue takes priority */
+.booking-picker [data-date].pick-start .fc-daygrid-day-number,
+.booking-picker [data-date].pick-end .fc-daygrid-day-number {
+    background: var(--sea-blue) !important;
+    color: var(--cloud) !important;
+    box-shadow: none;
+}
+
+@media (max-width: 480px) {
+    .booking-picker .fc .fc-daygrid-day-frame { min-height: 44px !important; }
+    .booking-picker .fc .fc-daygrid-day-number { font-size: 1rem; }
+    .picker-month-label { font-size: 1.15rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
