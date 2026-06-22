@@ -242,6 +242,20 @@ select:focus-visible,
 }
 .month-nav-btn:hover { background: #EAF2F8; }
 .month-nav-btn:active { transform: scale(0.97); }
+.month-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+    box-shadow: none;
+}
+.month-nav-btn:disabled:hover { background: var(--cloud); }
+
+/* Disabled primary button (e.g. Continue before dates are chosen) */
+.btn-confirm:disabled {
+    background: #B9C7D2;
+    box-shadow: none;
+    cursor: default;
+}
+.btn-confirm:disabled:hover { background: #B9C7D2; }
 
 #currentMonthLabel {
     flex: 1 1 auto;
@@ -361,16 +375,21 @@ select:focus-visible,
     justify-content: center;
     align-items: center;
     padding: 16px;
+    overflow-y: auto;          /* allow scrolling if a modal is taller than the screen */
+    -webkit-overflow-scrolling: touch;
     backdrop-filter: blur(4px);
 }
 
 .modal-content {
     background: var(--cloud);
-    padding: 30px 26px;
+    padding: 26px 24px;
     border-radius: 28px;
     text-align: center;
     width: 100%;
     max-width: 520px;
+    max-height: calc(100vh - 32px);   /* never taller than the viewport */
+    overflow-y: auto;                 /* scroll inside the card as a fallback */
+    margin: auto;                     /* keep centred while scrollable */
     box-shadow: var(--shadow-lg);
     animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -671,13 +690,13 @@ select:focus-visible,
 /* --- RANGE DATE PICKER --- */
 
 .picker-hint {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: var(--sea-blue);
     text-align: center;
-    margin: 0 0 14px 0;
-    min-height: 2.5em;
-    line-height: 1.4;
+    margin: 0 0 10px 0;
+    min-height: 2.6em;
+    line-height: 1.35;
 }
 
 .picker-month-nav {
@@ -703,109 +722,121 @@ select:focus-visible,
 }
 
 .booking-picker {
+    --pick-sun: radial-gradient(circle at 50% 42%, #FFE79A 0%, #FFC83D 55%, #F4A300 100%);
+    --pick-band: rgba(244, 180, 0, 0.30);
     border-radius: 18px;
     overflow: hidden;
     border: 1px solid var(--line);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 }
 
-/* Make picker day cells comfortably tappable */
-.booking-picker .fc .fc-daygrid-day-frame {
-    min-height: 52px !important;
+/* Compact, tidy day cells: a small circle per day, no tall rows */
+.booking-picker.fc .fc-daygrid-day-frame {
+    min-height: 0 !important;
+    height: 46px;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    position: relative;
 }
-.booking-picker .fc .fc-daygrid-day-number {
-    font-size: 1.1rem;
+.booking-picker.fc .fc-daygrid-day-frame::before,
+.booking-picker.fc .fc-daygrid-day-frame::after { content: none !important; }
+.booking-picker.fc .fc-daygrid-day-top { justify-content: center; width: 100%; }
+.booking-picker.fc .fc-daygrid-day-events,
+.booking-picker.fc .fc-daygrid-day-bg { display: none !important; }
+
+.booking-picker.fc .fc-daygrid-day-number {
+    font-size: 1.05rem;
     font-weight: 700;
-    padding: 6px 8px;
+    color: var(--ink-navy);
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
 }
-.booking-picker .fc .fc-col-header-cell-cushion {
-    font-size: 0.95rem;
-    padding: 8px 4px;
+.booking-picker.fc .fc-col-header-cell-cushion {
+    font-size: 0.9rem;
+    padding: 8px 2px;
 }
 
 /* Past days: greyed out, not clickable */
 .booking-picker [data-date].pick-past {
-    opacity: 0.35;
+    opacity: 0.3;
     pointer-events: none;
     cursor: default;
 }
 
-/* In-range band: soft sea-blue fill across the full cell */
+/* Sunshine band running between the two suns */
 .booking-picker [data-date].pick-in-range .fc-daygrid-day-frame {
-    background: rgba(10, 92, 138, 0.12);
+    background: var(--pick-band);
 }
-
-/* Start day: left half of band + solid pill on the day number */
 .booking-picker [data-date].pick-start .fc-daygrid-day-frame {
-    background: linear-gradient(
-        to right,
-        transparent 50%,
-        rgba(10, 92, 138, 0.12) 50%
-    );
+    background: linear-gradient(to right, transparent 50%, var(--pick-band) 50%);
 }
-.booking-picker [data-date].pick-start .fc-daygrid-day-number {
-    background: var(--sea-blue);
-    color: var(--cloud) !important;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 4px auto;
-}
-
-/* End day: right half of band + solid pill on the day number */
 .booking-picker [data-date].pick-end .fc-daygrid-day-frame {
-    background: linear-gradient(
-        to left,
-        transparent 50%,
-        rgba(10, 92, 138, 0.12) 50%
-    );
+    background: linear-gradient(to left, transparent 50%, var(--pick-band) 50%);
 }
-.booking-picker [data-date].pick-end .fc-daygrid-day-number {
-    background: var(--sea-blue);
-    color: var(--cloud) !important;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 4px auto;
-}
-
-/* When start and end are the same day (single-night stay) - just the pill */
 .booking-picker [data-date].pick-start.pick-end .fc-daygrid-day-frame {
     background: transparent;
 }
 
-/* Sun-gold today marker inside the picker */
-.booking-picker .fc .fc-day-today .fc-daygrid-day-number {
-    background: var(--sun-gold);
-    color: var(--ink-navy);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 4px auto;
-    font-weight: 800;
-    box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.3);
-}
-/* If today is the selected start or end, sea-blue takes priority */
+/* The chosen arrival and leaving days become little suns */
 .booking-picker [data-date].pick-start .fc-daygrid-day-number,
 .booking-picker [data-date].pick-end .fc-daygrid-day-number {
-    background: var(--sea-blue) !important;
-    color: var(--cloud) !important;
-    box-shadow: none;
+    background: var(--pick-sun);
+    color: var(--ink-navy);
+    font-weight: 800;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    border-radius: 50%;
+    box-shadow:
+        0 0 0 3px var(--cloud),
+        0 0 0 6px rgba(244, 180, 0, 0.5),
+        0 0 16px 4px rgba(244, 165, 0, 0.7);
+}
+/* Sun rays around each chosen day */
+.booking-picker [data-date].pick-start .fc-daygrid-day-number::before,
+.booking-picker [data-date].pick-end .fc-daygrid-day-number::before {
+    content: "";
+    position: absolute;
+    inset: -9px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(
+        rgba(244, 165, 0, 0.85) 0deg 7deg,
+        transparent 7deg 24deg
+    );
+    -webkit-mask: radial-gradient(circle, transparent 58%, #000 60%, #000 70%, transparent 72%);
+            mask: radial-gradient(circle, transparent 58%, #000 60%, #000 70%, transparent 72%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Today (when not chosen): a soft gold ring, not a filled circle */
+.booking-picker.fc .fc-day-today:not(.pick-start):not(.pick-end) .fc-daygrid-day-number {
+    background: transparent;
+    color: var(--ink-navy);
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    box-shadow: inset 0 0 0 2px rgba(244, 180, 0, 0.75);
+    font-weight: 800;
 }
 
 @media (max-width: 480px) {
-    .booking-picker .fc .fc-daygrid-day-frame { min-height: 44px !important; }
-    .booking-picker .fc .fc-daygrid-day-number { font-size: 1rem; }
+    .booking-picker.fc .fc-daygrid-day-frame { height: 42px; }
+    .booking-picker.fc .fc-daygrid-day-number {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
     .picker-month-label { font-size: 1.15rem; }
 }
 
