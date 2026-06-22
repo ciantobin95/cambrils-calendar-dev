@@ -31,20 +31,25 @@
             <div id="bookingStep2" style="display:none;">
                 <div class="flow-step-label">Step 2 of 3</div>
                 <h3>Which dates?</h3>
-                <div class="date-fields">
-                    <div class="date-field">
-                        <label for="arrivalDate">Arriving on</label>
-                        <input type="date" id="arrivalDate">
-                    </div>
-                    <div class="date-field">
-                        <label for="departureDate">Leaving on</label>
-                        <input type="date" id="departureDate">
-                    </div>
+
+                <!-- hidden inputs keep the rest of the flow unchanged -->
+                <input type="hidden" id="arrivalDate">
+                <input type="hidden" id="departureDate">
+
+                <p id="pickerHint" class="picker-hint">Tap your <strong>arrival</strong> day to start.</p>
+
+                <div class="picker-month-nav">
+                    <button id="pickerPrevBtn" class="month-nav-btn" aria-label="Previous month">&#8592;</button>
+                    <span id="pickerMonthLabel" class="picker-month-label"></span>
+                    <button id="pickerNextBtn" class="month-nav-btn" aria-label="Next month">&#8594;</button>
                 </div>
-                <div id="nightsSummary" class="nights-summary"></div>
-                <div class="modal-actions">
+
+                <div id="bookingPicker" class="booking-picker"></div>
+
+                <div id="nightsSummary" class="nights-summary" style="display:none;"></div>
+                <div class="modal-actions" style="margin-top:16px;">
                     <button id="datesBackBtn" class="btn-cancel">Back</button>
-                    <button id="datesNextBtn" class="btn-confirm">Continue</button>
+                    <button id="datesNextBtn" class="btn-confirm" disabled>Continue</button>
                 </div>
             </div>
 
