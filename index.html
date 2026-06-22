@@ -7,14 +7,47 @@
 
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-title" content="Cambrils">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0A5C8A">
     <meta name="app-version" content="__APP_VERSION__">
+
+    <!--
+        iPhone PWA launch image. Apple uses the link whose media query matches the
+        device, showing the photo as the static native splash so iPhones never see
+        the sunshine icon flash. Android ignores these tags entirely.
+    -->
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="splash-cambrils.jpg">
+
+    <!--
+        Critical splash CSS, inlined so the overlay paints on the very first frame
+        before style.css has loaded. This keeps the OS-handoff seamless on iOS and
+        minimises how long the Android icon-flash is visible.
+    -->
+    <style>
+        #appSplash{position:fixed;inset:0;z-index:99999;background:#6EB4D6;overflow:hidden;}
+        #appSplash::before{content:"";position:absolute;inset:0;background-image:url('splash-cambrils.jpg');background-size:cover;background-position:center;will-change:transform,opacity;transform:scale(1);}
+        body.app-splash-active{overflow:hidden;}
+        body.app-splash-active header{opacity:0;}
+    </style>
 
     <script src="./fullcalendar.min.js"></script>
 
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="app-splash-active">
+
+    <div id="appSplash" aria-hidden="true"></div>
 
     <div id="updateBanner" class="update-banner" hidden>
         <span class="update-banner-text">A new version is ready.</span>

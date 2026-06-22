@@ -23,6 +23,70 @@
 
 * { box-sizing: border-box; }
 
+/* --- APP SPLASH ---
+   Full-bleed photo with a slow 3s zoom, then dissolves to reveal the calendar.
+   Works on Android (where Chrome's brief icon-splash is unavoidable) and on
+   iOS (where the apple-touch-startup-image hands off seamlessly into this).
+   Critical positioning + image rules are inlined in <head> so the overlay
+   paints on first frame; the animation rules live here. */
+#appSplash::before {
+    transition: none;
+}
+
+#appSplash.is-zooming::before {
+    animation: appSplashZoom 3000ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+#appSplash.is-leaving {
+    animation: appSplashFade 700ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+#appSplash.is-leaving::before {
+    animation: appSplashZoomOut 700ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes appSplashZoom {
+    from { transform: scale(1); }
+    to   { transform: scale(1.12); }
+}
+
+@keyframes appSplashZoomOut {
+    from { transform: scale(1.12); }
+    to   { transform: scale(1.22); }
+}
+
+@keyframes appSplashFade {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* The header softly slides down behind the dissolving splash, so the
+   reveal feels like the camera handing off to the real app. */
+body.app-splash-leaving header {
+    animation: appHeaderReveal 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes appHeaderReveal {
+    0%   { opacity: 0; transform: translateY(-14px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #appSplash.is-zooming::before,
+    #appSplash.is-leaving::before {
+        animation: none;
+        transform: none;
+    }
+    #appSplash.is-leaving {
+        animation: appSplashFade 200ms ease forwards;
+    }
+    body.app-splash-leaving header {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
 /* --- UPDATE BANNER --- */
 .update-banner {
     position: sticky;
